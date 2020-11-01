@@ -1,0 +1,26 @@
+# borrowing heavily from https://github.com/DavidBakerEffendi/tigergraph/blob/master/3/3.0.5/docker-compose.yml
+
+version: '3'
+services:
+    tigergraph:
+        container_name: tigergraph
+        build: .
+        ports:
+            - "14022:22"
+            - "9000:9000"
+            - "14240:14240"
+        volumes:
+            - tigergraph:/var/lib/tigergraph/data
+        healthcheck:
+            test: ["CMD-SHELL", "curl --fail http://localhost:9000/echo || exit 1"]
+            interval: 5s
+            timeout: 10s
+            retries: 5
+        ulimits:
+            nofile:
+                soft: 1000000
+                hard: 1000000
+        stdin_open: true
+        tty: true
+volumes:
+    tigergraph:
